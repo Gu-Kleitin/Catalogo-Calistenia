@@ -63,7 +63,7 @@ export class ExercicioController {
             res.status(500).json({message: 'Erro ao atualizar o exercício', error})
         };
     };
-    
+
     public async updateExercicioRegressao(req: Request, res: Response): Promise<void>{
         try{
             const id_exercicioAlterado = Number(req.params.id_exercicioAlterado);
@@ -89,4 +89,24 @@ export class ExercicioController {
             res.status(500).json({message: 'Erro ao atualizar o exercício', error})
         };
     };
+
+    public async deleteExercicioController(req: Request, res: Response): Promise<void>{
+        try{
+            const id_exercicioADeletar = Number(req.params.id_exercicioADeletar);
+            const exercicioADeletar = await getExerciciosById(id_exercicioADeletar);
+            if(!exercicioADeletar){
+                res.status(404).json({message: `O exercício de ID ${id_exercicioADeletar} não existe`});
+                return;
+            }
+            const exercicioDeletado = await deleteExercicio(id_exercicioADeletar);
+            if(!exercicioDeletado){
+                res.status(500).json({message: `Erro interno ao deletar o exercício ${exercicioADeletar.nome}`});
+                return;
+            }
+            res.status(200).json({message: `Exercício ${exercicioADeletar.nome} deletado com sucesso!`});
+
+        } catch(error){
+            res.status(500).json({message: 'Erro ao excluir o exercício', error})
+        };
+    }
 };
